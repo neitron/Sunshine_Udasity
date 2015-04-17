@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class DetailActivity extends Activity {
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +94,7 @@ public class DetailActivity extends Activity {
             // Attach an intent to this ShareActionProvider.  You can update this at any time,
             // like when the user selects a new piece of data they might like to share.
             if (mShareActionProvider != null ) {
-                Log.d(LOG_TAG, "All good :)");
+
                 mShareActionProvider.setShareIntent(createShareForecastIntent());
             } else {
                 Log.d(LOG_TAG, "Share Action Provider is null?");
