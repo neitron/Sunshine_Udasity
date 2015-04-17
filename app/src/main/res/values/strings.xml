@@ -1,0 +1,31 @@
+<resources>
+    <string name="app_name">Sunshine</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="input">input</string>
+    <string name="title_activity_detail">Details</string>
+
+    <string name="pref_loc_label">Location</string>
+    <string name="pref_loc_key" translatable="false">location</string>
+    <string name="pref_loc_default" translatable="false">Moscow,ru</string>
+
+    <string name="pref_met_title">Units</string>
+    <string name="pref_met_key">units</string>
+    <string name="pref_met_default">metric</string>
+
+    <string name="pref_title_add_friends_to_messages">Add friends to messages</string>
+    <string-array name="pref_example_list_titles">
+        <item>Internal</item>
+        <item>Metric</item>
+        <item>Imperial</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item></item>
+        <item>metric</item>
+        <item>imperial</item>
+    </string-array>
+
+    <string name="action_map">Map Location</string>
+
+
+</resources>
