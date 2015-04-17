@@ -18,7 +18,8 @@
         android:divider="#ffd1cfcb"
         android:dividerHeight="0.5dp"
         android:drawSelectorOnTop="false"
-        android:padding="8dp" />
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp" />
 
 
 </FrameLayout>
