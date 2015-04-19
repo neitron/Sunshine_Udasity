@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 public class DetailActivity extends Activity {
 
+    final private static String LOG_TEST = DetailActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,43 @@ public class DetailActivity extends Activity {
                     .add(R.id.container, new DetailFragment())
                     .commit();
         }
+        Log.d(LOG_TEST,"onCrete");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.d(LOG_TEST,"onPause");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.d(LOG_TEST,"onStop");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        Log.d(LOG_TEST,"onResume");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.d(LOG_TEST,"onStart");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d(LOG_TEST,"onRestart");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.d(LOG_TEST,"onDestroy");
     }
 
     @Override
