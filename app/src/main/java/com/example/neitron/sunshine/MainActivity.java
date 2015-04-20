@@ -68,11 +68,8 @@ public class MainActivity extends Activity {
     }
 
     private void openPreferredLocationInMap() {
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        String location = sp.getString(
-                getString(R.string.pref_loc_key),
-                getString(R.string.pref_loc_default)
-        );
+
+        String location = Utility.getPreferredLocation(this);
 
         // Using the URI scheme for showing a location found on a map.  This super-handy
         // intent can is detailed in the "Common Intents" page of Android's developer site:
