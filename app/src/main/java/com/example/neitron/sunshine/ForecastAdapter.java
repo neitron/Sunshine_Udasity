@@ -1,10 +1,5 @@
 package com.example.neitron.sunshine;
 
-/**
- * Created by neitron on 20.04.2015.
- */
-
-
 import android.content.Context;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
@@ -12,8 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
-import com.example.neitron.sunshine.data.WeatherContract;
 
 /**
  * {@link ForecastAdapter} exposes a list of weather forecasts
@@ -29,8 +22,7 @@ public class ForecastAdapter extends CursorAdapter {
      */
     private String formatHighLows(double high, double low) {
         boolean isMetric = Utility.isMetric(mContext);
-        String highLowStr = Utility.formatTemperature(high, isMetric) + "/" + Utility.formatTemperature(low, isMetric);
-        return highLowStr;
+        return Utility.formatTemperature(high, isMetric) + "/" + Utility.formatTemperature(low, isMetric);
     }
 
     /*
@@ -55,9 +47,8 @@ public class ForecastAdapter extends CursorAdapter {
      */
     @Override
     public View newView(Context context, Cursor cursor, ViewGroup parent) {
-        View view = LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
+        return LayoutInflater.from(context).inflate(R.layout.list_item_forecast, parent, false);
 
-        return view;
     }
 
     /*

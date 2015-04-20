@@ -17,7 +17,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ShareActionProvider;
 import android.widget.TextView;
-
 import com.example.neitron.sunshine.data.WeatherContract;
 
 public class DetailActivity extends Activity {
@@ -119,7 +118,7 @@ public class DetailActivity extends Activity {
 
         // these constants correspond to the projection defined above, and must change if the
         // projection changes
-        private static final int COL_WEATHER_ID = 0;
+        //private static final int COL_WEATHER_ID = 0;
         private static final int COL_WEATHER_DATE = 1;
         private static final int COL_WEATHER_DESC = 2;
         private static final int COL_WEATHER_MAX_TEMP = 3;

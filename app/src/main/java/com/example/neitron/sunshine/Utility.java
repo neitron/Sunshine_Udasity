@@ -1,8 +1,6 @@
 package com.example.neitron.sunshine;
 
-/**
- * Created by neitron on 20.04.2015.
- */
+
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
