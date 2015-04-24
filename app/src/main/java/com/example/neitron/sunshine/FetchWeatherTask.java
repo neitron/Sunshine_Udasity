@@ -21,12 +21,17 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Vector;
 
-public class FetchWeatherTask extends AsyncTask<String, Void, Void>
+// кдасс для запроса джейсон данных о погоде
+public class FetchWeatherTask
+        extends AsyncTask<String, Void, Void>
 {
+    // для логирования
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
-    private final Context mContext;
+    private final Context mContext; // контекст, родитель активити (ключ от всех дверей)
 
-    public FetchWeatherTask(Context context) {
+    // создаем екземпляр
+    public FetchWeatherTask(Context context)
+    {
         mContext = context;
     }
 
@@ -39,23 +44,30 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
      * @param lon the longitude of the city
      * @return the row ID of the added location.
      */
-    public long addLocation(String locationSetting, String cityName, double lat, double lon) {
+    public long addLocation(String locationSetting, String cityName, double lat, double lon)
+    {
         long locationId;
 
-        // First, check if the location with this city name exists in the db
+        // Получаем в курсор все записи из тал локация
+        // столбик только айди
+        // айди только тох записей у которых локация = locationSetting
         Cursor locationCursor = mContext.getContentResolver().query(
-                WeatherContract.LocationEntry.CONTENT_URI,
-                new String[]{WeatherContract.LocationEntry._ID},
-                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?",
-                new String[]{locationSetting},
-                null);
+                WeatherContract.LocationEntry.CONTENT_URI,//content://com.example.neitron.sunshine/location/ (таблица локация)
+                new String[]{WeatherContract.LocationEntry._ID}, // столбцы (поля которые хотим получить)
+                WeatherContract.LocationEntry.COLUMN_LOCATION_SETTING + " = ?", // условие (WHERE)
+                new String[]{locationSetting}, // аргументы для условия (подставляютс в условие вместо ? , а)
+                null); // сортировка
 
-        if (locationCursor.moveToFirst()) {
+        if (locationCursor.moveToFirst())
+        {
+            // индекс столбца с именем _id
             int locationIdIndex = locationCursor.getColumnIndex(WeatherContract.LocationEntry._ID);
+            // получаем значение в колонке _id как длинное целое
             locationId = locationCursor.getLong(locationIdIndex);
-        } else {
-            // Now that the content provider is set up, inserting rows of data is pretty simple.
-            // First create a ContentValues object to hold the data you want to insert.
+        }
+        else
+        {
+            // если такой записи нет
             ContentValues locationValues = new ContentValues();
 
             // Then add the data, along with the corresponding name of the data type,
@@ -65,13 +77,14 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
             locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LAT, lat);
             locationValues.put(WeatherContract.LocationEntry.COLUMN_COORD_LONG, lon);
 
-            // Finally, insert location data into the database.
+            // Finally, insert location data into the database. учитывая юри, и получим полный путь к записи
             Uri insertedUri = mContext.getContentResolver().insert(
-                    WeatherContract.LocationEntry.CONTENT_URI,
-                    locationValues
+                    WeatherContract.LocationEntry.CONTENT_URI, // юри к таблице локаций
+                    locationValues // новые данные
             );
 
             // The resulting URI contains the ID for the row.  Extract the locationId from the Uri.
+            // конвертируем последний сегмент юри в лонг
             locationId = ContentUris.parseId(insertedUri);
         }
 
@@ -87,9 +100,12 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
      * Fortunately parsing is easy:  constructor takes the JSON string and converts it
      * into an Object hierarchy for us.
      */
-    private void getWeatherDataFromJson(String forecastJsonStr,
-                                        String locationSetting)
-            throws JSONException {
+    // получаем данные из строки
+    private void getWeatherDataFromJson(
+            String forecastJsonStr,// данные в виде строки
+            String locationSetting)// заданая локация
+    throws JSONException
+    {
 
         // Now we have a String representing the complete forecast in JSON Format.
         // Fortunately parsing is easy:  constructor takes the JSON string and converts it
@@ -123,18 +139,27 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
         final String OWM_DESCRIPTION = "main";
         final String OWM_WEATHER_ID = "id";
 
+        // разбираем джейсон строку на части
         try {
             JSONObject forecastJson = new JSONObject(forecastJsonStr);
             JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
 
+            // данные о городе
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
 
+            // координаты города
             JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
             double cityLatitude = cityCoord.getDouble(OWM_LATITUDE);
             double cityLongitude = cityCoord.getDouble(OWM_LONGITUDE);
 
-            long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
+            // добавляем локацию в бд и получаем айди записи
+            // или находим существующую
+            long locationId = addLocation(
+                    locationSetting, // локация на данный момент заданая в настройках
+                    cityName, // имя города
+                    cityLatitude, // координаты широты
+                    cityLongitude); // координаты долготы
 
             // Insert the new weather information into the database
             Vector<ContentValues> cVVector = new Vector<>(weatherArray.length());
@@ -235,7 +260,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
         if (params.length == 0) {
             return null;
         }
-        String locationQuery = params[0];
+        String locationQuery = params[0]; // заданая локация
 
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
@@ -247,7 +272,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
 
         String format = "json";
         String units = "metric";
-        int numDays = 14;
+        int numDays = 7;
 
         try {
             // Construct the URL for the OpenWeatherMap query
@@ -276,14 +301,16 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
 
             // Read the input stream into a String
             InputStream inputStream = urlConnection.getInputStream();
-            StringBuilder buffer = new StringBuilder();
+
             if (inputStream == null) {
                 // Nothing to do.
                 return null;
             }
-            reader = new BufferedReader(new InputStreamReader(inputStream));
 
+            reader = new BufferedReader(new InputStreamReader(inputStream));
+            StringBuilder buffer = new StringBuilder();
             String line;
+
             while ((line = reader.readLine()) != null) {
                 // Since it's JSON, adding a newline isn't necessary (it won't affect parsing)
                 // But it does make debugging a *lot* easier if you print out the completed
@@ -297,6 +324,11 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void>
                 return null;
             }
             forecastJsonStr = buffer.toString();
+
+            Log.d(LOG_TAG, forecastJsonStr);
+
+
+            // получаем даные из строки
             getWeatherDataFromJson(forecastJsonStr, locationQuery);
 
         } catch (IOException e) {

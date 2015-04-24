@@ -79,12 +79,16 @@ public class WeatherProvider extends ContentProvider {
     }
 
     private Cursor getWeatherByLocationSettingAndDate(
-            Uri uri, String[] projection, String sortOrder) {
+            Uri uri,
+            String[] projection,
+            String sortOrder)
+    {
 
         String locationSetting = WeatherContract.WeatherEntry.getLocationSettingFromUri(uri);
         long date = WeatherContract.WeatherEntry.getDateFromUri(uri);
 
-        return sWeatherByLocationSettingQueryBuilder.query(mOpenHelper.getReadableDatabase(),
+        return sWeatherByLocationSettingQueryBuilder.query(
+                mOpenHelper.getReadableDatabase(),
                 projection,
                 sLocationSettingAndDaySelection,
                 new String[]{locationSetting, Long.toString(date)},

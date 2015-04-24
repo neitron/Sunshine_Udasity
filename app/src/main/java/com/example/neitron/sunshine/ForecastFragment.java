@@ -49,15 +49,15 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
 
     // These indices are tied to FORECAST_COLUMNS.  If FORECAST_COLUMNS changes, these
     // must change.
-    //static final int COL_WEATHER_ID = 0;
+    static final int COL_WEATHER_ID = 0;
     static final int COL_WEATHER_DATE = 1;
     static final int COL_WEATHER_DESC = 2;
     static final int COL_WEATHER_MAX_TEMP = 3;
     static final int COL_WEATHER_MIN_TEMP = 4;
-//    static final int COL_LOCATION_SETTING = 5;
-//    static final int COL_WEATHER_CONDITION_ID = 6;
-//    static final int COL_COORD_LAT = 7;
-//    static final int COL_COORD_LONG = 8;
+    static final int COL_LOCATION_SETTING = 5;
+    static final int COL_WEATHER_CONDITION_ID = 6;
+    static final int COL_COORD_LAT = 7;
+    static final int COL_COORD_LONG = 8;
 
     //private ArrayAdapter<String> mForecastAdapter;
     private ForecastAdapter mForecastAdapter;
@@ -65,6 +65,7 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
     static final String FORECAST_ADAPTER = "weatherData";
     static ArrayList<String> resultListWeather = new ArrayList<>();
 
+    // пустой конструктор
     public ForecastFragment() {
     }
 
@@ -91,17 +92,20 @@ public  class ForecastFragment extends Fragment implements LoaderManager.LoaderC
         inflater.inflate(R.menu.forecastfragment, menu);
     }
 
-    // since we read the location when we create the loader, all we need to do is restart things
-    void onLocationChanged( ) {
-        UpdateWeather();
+    // изменяем локацию
+    void onLocationChanged( )
+    {
+        UpdateWeather(); // обновлем погоду
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
-    public void UpdateWeather() {
+    // обновлем погоду
+    public void UpdateWeather()
+    {
         FetchWeatherTask fwt = new FetchWeatherTask(getActivity());
 
         String location = Utility.getPreferredLocation(getActivity());
-
+        // обрабатываем запрос в другом потоке
         fwt.execute(location);
     }
 

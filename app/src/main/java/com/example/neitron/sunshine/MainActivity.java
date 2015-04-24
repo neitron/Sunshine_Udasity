@@ -1,6 +1,8 @@
 package com.example.neitron.sunshine;
 
 import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -8,21 +10,52 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends Activity {
-
+// с этого активити начинается приложение
+public class MainActivity extends Activity
+{
+    // тег для логирования (почемуто они обязательны)
     private static final String LOG_TAG = MainActivity.class.getSimpleName();
+    // дополнительное теговое имя фрагмента, потом будем находить фрагмент с пощью него
     private final String FORECASTFRAGMENT_TAG = "FFTAG";
+    // локация, ключ-значение
     private String mLocation;
 
+    // при первом создании активити
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        mLocation = Utility.getPreferredLocation(this);
+    protected void onCreate(Bundle savedInstanceState)
+    {
+        // родитель
         super.onCreate(savedInstanceState);
+
+        // предпочтительная локация (0\ контекст этого приложения)
+        mLocation = Utility.getPreferredLocation(this);
+        // хмл шаблон
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG)
-                    .commit();
+
+        // если нет сохраненного состояния активити
+        if (savedInstanceState == null)
+        {
+            FragmentManager fm = getFragmentManager(); // менеджер для работы с фрагментами
+            FragmentTransaction ft = fm.beginTransaction(); // открываем транзакцию (как в бд перед работой напрямую)
+            // добавляем свой ForecastFragment в контейнер активити
+            ft.add(R.id.container, new ForecastFragment(), FORECASTFRAGMENT_TAG);
+            ft.commit(); // завершаем транзакцию
+        }
+    }
+
+    // перед тем как станет доступно для активности
+    @Override
+    protected void onResume()
+    {
+        super.onResume(); // родитель
+        String location = Utility.getPreferredLocation( this );
+        // если именили локацию
+        if (location != null && !location.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment)getFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
+            if ( null != ff ) {
+                ff.onLocationChanged();
+            }
+            mLocation = location;
         }
     }
 
@@ -73,17 +106,5 @@ public class MainActivity extends Activity {
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String location = Utility.getPreferredLocation( this );
-        // update the location in our second pane using the fragment manager
-        if (location != null && !location.equals(mLocation)) {
-            ForecastFragment ff = (ForecastFragment)getFragmentManager().findFragmentByTag(FORECASTFRAGMENT_TAG);
-            if ( null != ff ) {
-                ff.onLocationChanged();
-            }
-            mLocation = location;
-        }
-    }
+
 }
